@@ -1,311 +1,748 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infografica Interattiva: Teoria dei Vettori</title>
-    <style>
-        :root {
-            --primary: #1a4a7c;
-            --secondary: #3498db;
-            --accent: #e67e22;
-            --bg: #f4f7f6;
-            --card-bg: #ffffff;
-            --text: #2c3e50;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutorial — Dall'Approfondimento all'Infografica Interattiva</title>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fafaf8;
+  --bg-code: #1e1e2e;
+  --bg-card: #ffffff;
+  --bg-step: #f0f4f8;
+  --accent: #1a56db;
+  --accent2: #7c3aed;
+  --accent3: #059669;
+  --text: #1e293b;
+  --text-dim: #64748b;
+  --text-code: #cdd6f4;
+  --border: #e2e8f0;
+  --yellow: #fef3c7;
+  --yellow-border: #f59e0b;
+  --green: #ecfdf5;
+  --green-border: #10b981;
+  --blue: #eff6ff;
+  --blue-border: #3b82f6;
+  --red: #fef2f2;
+  --red-border: #ef4444;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Literata', Georgia, serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  font-size: 16px;
+}
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+/* ===== LAYOUT ===== */
+.wrapper {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
 
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+/* ===== COVER ===== */
+.cover {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1a2744 100%);
+  color: #f8fafc;
+  padding: 80px 28px 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cover::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle at 70% 30%, rgba(56,189,248,0.08) 0%, transparent 50%),
+              radial-gradient(circle at 30% 70%, rgba(124,58,237,0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+.cover-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+.cover-badge {
+  display: inline-block;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #38bdf8;
+  border: 1px solid rgba(56,189,248,0.3);
+  padding: 6px 20px;
+  border-radius: 999px;
+  margin-bottom: 24px;
+}
+.cover h1 {
+  font-family: 'Literata', serif;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 16px;
+}
+.cover h1 em { font-style: italic; color: #38bdf8; }
+.cover p {
+  font-size: 15px;
+  color: #94a3b8;
+  line-height: 1.7;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+.cover .meta {
+  margin-top: 28px;
+  font-size: 13px;
+  color: #64748b;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
 
-        h1 { color: var(--primary); margin-bottom: 5px; }
-        .subtitle { color: #666; font-style: italic; }
+/* ===== TOC ===== */
+.toc {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin: 40px auto;
+  max-width: 780px;
+}
+.toc h2 {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+.toc ol {
+  list-style: none;
+  counter-reset: toc-counter;
+  padding: 0;
+}
+.toc ol li {
+  counter-increment: toc-counter;
+  margin-bottom: 6px;
+}
+.toc ol li a {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14.5px;
+  color: var(--text);
+  text-decoration: none;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 4px 0;
+  transition: color 0.2s;
+}
+.toc ol li a:hover { color: var(--accent); }
+.toc ol li a::before {
+  content: counter(toc-counter, decimal-leading-zero);
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 13px;
+  flex-shrink: 0;
+  width: 24px;
+}
 
-        .infographic-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 25px;
-            max-width: 1100px;
-            width: 100%;
-        }
+/* ===== SECTIONS ===== */
+section {
+  margin: 48px auto;
+  max-width: 780px;
+}
+section h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+  padding-top: 20px;
+  border-top: 2px solid var(--accent);
+  display: inline-block;
+}
+section h2 .step-num {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 4px;
+}
+section h3 {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 28px 0 10px;
+}
+section p {
+  margin-bottom: 14px;
+}
+section ul, section ol {
+  margin: 10px 0 18px 24px;
+}
+section li {
+  margin-bottom: 6px;
+}
 
-        .category-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-top: 5px solid var(--secondary);
-            position: relative;
-            overflow: hidden;
-        }
+/* ===== CODE BLOCKS ===== */
+pre {
+  background: var(--bg-code);
+  color: var(--text-code);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  padding: 20px 24px;
+  border-radius: 10px;
+  overflow-x: auto;
+  margin: 14px 0 20px;
+  border: 1px solid #313244;
+}
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88em;
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #be185d;
+}
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
 
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            background-color: #fcfcfc;
-        }
+/* prompt blocks */
+.prompt-block {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  color: #e0e7ff;
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin: 16px 0 22px;
+  position: relative;
+  border: 1px solid #4338ca;
+}
+.prompt-block::before {
+  content: 'PROMPT';
+  position: absolute;
+  top: -10px; left: 20px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #818cf8;
+  background: #1e1b4b;
+  padding: 2px 10px;
+  border-radius: 4px;
+  border: 1px solid #4338ca;
+}
+.prompt-block p {
+  font-family: 'Literata', serif;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #e0e7ff;
+  margin-bottom: 0;
+}
 
-        .category-card h2 {
-            margin-top: 0;
-            color: var(--primary);
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+/* callout boxes */
+.callout {
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin: 18px 0;
+  font-size: 14.5px;
+  border-left: 4px solid;
+}
+.callout.tip { background: var(--green); border-color: var(--green-border); }
+.callout.warning { background: var(--yellow); border-color: var(--yellow-border); }
+.callout.info { background: var(--blue); border-color: var(--blue-border); }
+.callout.danger { background: var(--red); border-color: var(--red-border); }
+.callout .callout-title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.callout.tip .callout-title { color: var(--green-border); }
+.callout.warning .callout-title { color: #b45309; }
+.callout.info .callout-title { color: var(--blue-border); }
+.callout.danger .callout-title { color: var(--red-border); }
 
-        .category-card p {
-            font-size: 0.95rem;
-            color: #555;
-            line-height: 1.4;
-        }
+/* step cards */
+.substep {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin: 14px 0;
+}
+.substep h4 {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
 
-        .icon {
-            font-size: 1.5rem;
-        }
+/* images / screenshots placeholder */
+.screenshot {
+  background: #f1f5f9;
+  border: 2px dashed #cbd5e1;
+  border-radius: 10px;
+  padding: 32px 24px;
+  text-align: center;
+  margin: 16px 0;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text-dim);
+}
 
-        /* Modal Styles */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
-        }
+/* footer */
+.doc-footer {
+  text-align: center;
+  padding: 40px 28px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border);
+  margin-top: 60px;
+}
 
-        .modal-content {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            max-width: 700px;
-            width: 90%;
-            max-height: 85vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-        }
+/* print */
+@media print {
+  .cover { padding: 40px 20px 30px; }
+  pre { font-size: 11px; }
+  .prompt-block { break-inside: avoid; }
+  section { break-before: auto; }
+}
 
-        .close-btn {
-            position: absolute;
-            top: 15px; right: 20px;
-            font-size: 28px;
-            cursor: pointer;
-            color: #999;
-        }
-
-        .close-btn:hover { color: var(--accent); }
-
-        .detail-title { color: var(--primary); border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-bottom: 20px; }
-        
-        .formula-box {
-            background: #f8f9fa;
-            border-left: 4px solid var(--accent);
-            padding: 15px;
-            margin: 15px 0;
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: bold;
-            color: #333;
-        }
-
-        ul { padding-left: 20px; }
-        li { margin-bottom: 10px; line-height: 1.5; }
-        strong { color: var(--primary); }
-
-        @media (max-width: 850px) {
-            .infographic-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+@media (max-width: 600px) {
+  .wrapper { padding: 0 16px; }
+  pre { font-size: 12px; padding: 14px 16px; }
+  .prompt-block { padding: 18px 16px; }
+}
+</style>
 </head>
 <body>
 
-    <header>
-        <h1>Guida Interattiva alla Teoria dei Vettori</h1>
-        <p class="subtitle">Modulo 1 - Prof. Ing. Raucci Biagio (ITIS E. Majorana - Cassino)</p>
-    </header>
+<!-- ===================== COVER ===================== -->
+<header class="cover">
+  <div class="cover-inner">
+    <div class="cover-badge">Laboratorio Digitale</div>
+    <h1>Dall'Approfondimento all'<em>Infografica Interattiva</em></h1>
+    <p>Tutorial pratico passo-passo: ricerca con NotebookLM, generazione con Claude, pubblicazione su GitHub Pages.</p>
+    <div class="meta">Prof. Ing. Raucci Biagio — ITIS E. Majorana, Cassino<br>A.S. 2025/2026 — Costruzioni Aeronautiche</div>
+  </div>
+</header>
 
-    <div class="infographic-grid">
-        <!-- Card 1 -->
-        <div class="category-card" onclick="openModal('anatomia')">
-            <h2><span class="icon">📐</span> Anatomia del Vettore</h2>
-            <p>Scopri gli elementi fondamentali: modulo, direzione, verso e punto di applicazione.</p>
-        </div>
+<!-- ===================== TOC ===================== -->
+<nav class="toc wrapper">
+  <h2>Indice del Tutorial</h2>
+  <ol>
+    <li><a href="#panoramica">Panoramica del flusso di lavoro</a></li>
+    <li><a href="#step1">Ricerca e studio con NotebookLM</a></li>
+    <li><a href="#step2">Generazione dell'infografica statica</a></li>
+    <li><a href="#step3">Preparare il materiale per Claude</a></li>
+    <li><a href="#step4">Il prompt per Claude: generare l'infografica interattiva</a></li>
+    <li><a href="#step5">Revisione e raffinamento iterativo</a></li>
+    <li><a href="#step6">Creare un account GitHub</a></li>
+    <li><a href="#step7">Creare il repository e caricare il file</a></li>
+    <li><a href="#step8">Attivare GitHub Pages</a></li>
+    <li><a href="#step9">Inviare il link al docente</a></li>
+    <li><a href="#criteri">Criteri di valutazione</a></li>
+  </ol>
+</nav>
 
-        <!-- Card 2 -->
-        <div class="category-card" onclick="openModal('scalari')">
-            <h2><span class="icon">🔢</span> Scalari vs Vettoriali</h2>
-            <p>La differenza tra grandezze definite solo da un numero e quelle che richiedono orientamento.</p>
-        </div>
+<!-- ===================== CONTENT ===================== -->
+<div class="wrapper">
 
-        <!-- Card 3 -->
-        <div class="category-card" onclick="openModal('versori')">
-            <h2><span class="icon">🧭</span> Versori e Sistemi Oxyz</h2>
-            <p>I "mattoni" dell'orientamento: vettori unitari e la regola della mano destra.</p>
-        </div>
+<!-- ===== PANORAMICA ===== -->
+<section id="panoramica">
+  <h2><span class="step-num">Fase 0</span>Panoramica del flusso di lavoro</h2>
 
-        <!-- Card 4 -->
-        <div class="category-card" onclick="openModal('operazioni')">
-            <h2><span class="icon">➕</span> Operazioni Grafiche</h2>
-            <p>Come sommare e sottrarre vettori con le regole del parallelogramma e del poligono.</p>
-        </div>
+  <p>Il lavoro si articola in quattro macro-fasi, ciascuna con i propri strumenti:</p>
 
-        <!-- Card 5 -->
-        <div class="category-card" onclick="openModal('scomposizione')">
-            <h2><span class="icon">📉</span> Analisi Cartesiana</h2>
-            <p>Scomposizione in componenti X e Y utilizzando la trigonometria e il Teorema di Pitagora.</p>
-        </div>
+  <ol>
+    <li><strong>Ricerca e comprensione</strong> — Usate <em>NotebookLM</em> (di Google) per caricare le fonti (dispense, appunti, PDF del docente) e far generare all'IA un riepilogo strutturato dell'argomento. Da NotebookLM otterrete anche un'<em>infografica statica</em> (un'immagine PNG) che servirà come riferimento grafico.</li>
+    <li><strong>Generazione interattiva</strong> — Caricate su <em>Claude</em> (claude.ai) sia il PDF originale sia l'infografica statica di NotebookLM, insieme a un prompt preciso. Claude genererà un file HTML/JavaScript unico contenente l'infografica interattiva.</li>
+    <li><strong>Revisione</strong> — Controllate il risultato, chiedete correzioni e migliorie tramite prompt successivi.</li>
+    <li><strong>Pubblicazione</strong> — Caricate il file HTML su <em>GitHub Pages</em> e inviate il link al docente.</li>
+  </ol>
 
-        <!-- Card 6 -->
-        <div class="category-card" onclick="openModal('prodotti')">
-            <h2><span class="icon">✖️</span> Prodotti tra Vettori</h2>
-            <p>Confronto tra prodotto scalare (risultato numerico) e prodotto vettoriale (nuovo vettore).</p>
-        </div>
+  <div class="callout info">
+    <div class="callout-title">Strumenti necessari</div>
+    <p>Un browser web aggiornato (Chrome, Safari, Firefox), un account Google (per NotebookLM), un account su <a href="https://claude.ai">claude.ai</a> (gratuito), un account su <a href="https://github.com">github.com</a> (gratuito). Non serve installare nulla sul computer.</p>
+  </div>
+</section>
 
-        <!-- Card 7 -->
-        <div class="category-card" onclick="openModal('applicazioni')" style="grid-column: 1 / -1; border-top-color: var(--accent);">
-            <h2><span class="icon">🚀</span> Applicazioni nella Fisica</h2>
-            <p>Come i vettori descrivono posizione, velocità e accelerazione nel moto di un punto.</p>
-        </div>
-    </div>
+<!-- ===== STEP 1 ===== -->
+<section id="step1">
+  <h2><span class="step-num">Fase 1</span>Ricerca e studio con NotebookLM</h2>
 
-    <!-- Modal Overlay -->
-    <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <div id="modalBody">
-                <!-- Content injected by JS -->
-            </div>
-        </div>
-    </div>
+  <h3>1.1 — Accedere a NotebookLM</h3>
+  <p>Andate su <code>notebooklm.google.com</code> e accedete con il vostro account Google. Cliccate su <strong>"Nuovo notebook"</strong> per creare uno spazio di lavoro dedicato al vostro argomento.</p>
 
-    <script>
-        const contentData = {
-            anatomia: {
-                title: "Anatomia e Rappresentazione del Vettore",
-                body: `
-                    <p>Un vettore può essere rappresentato graficamente da una <strong>freccia</strong> che fornisce tre informazioni essenziali:</p>
-                    <ul>
-                        <li><strong>Direzione:</strong> È la retta su cui giace la freccia.</li>
-                        <li><strong>Verso:</strong> Indicato dalla punta della freccia.</li>
-                        <li><strong>Modulo (o Intensità):</strong> La lunghezza della freccia che, in un'opportuna scala, fornisce il valore della grandezza.</li>
-                        <li><strong>Punto di Applicazione:</strong> Il punto di origine da cui parte il vettore.</li>
-                    </ul>
-                `
-            },
-            scalari: {
-                title: "Grandezze Scalari vs Vettoriali",
-                body: `
-                    <ul>
-                        <li><strong>Grandezze Scalari:</strong> Espresse semplicemente da un numero associato a un'unità di misura (es. massa, tempo). Esistono anche grandezze <em>adimensionali</em> (numeri puri).</li>
-                        <li><strong>Grandezze Vettoriali (Vettori):</strong> Per essere definite necessitano di modulo, direzione e verso (es. forza, velocità).</li>
-                    </ul>
-                `
-            },
-            versori: {
-                title: "Versori e Sistema di Assi Cartesiani",
-                body: `
-                    <p>I <strong>versori</strong> sono vettori speciali di modulo unitario e adimensionali.</p>
-                    <ul>
-                        <li><strong>Proprietà:</strong> Un vettore è un versore se e solo se il suo modulo è pari a 1.</li>
-                        <li><strong>Assi Cartesiani (Oxyz):</strong> Un sistema formato da tre rette ortogonali che si intersecano nell'origine O.</li>
-                        <li><strong>Versori Fondamentali:</strong> 
-                            <ul>
-                                <li>Asse x: versore <strong>i</strong></li>
-                                <li>Asse y: versore <strong>j</strong></li>
-                                <li>Asse z: versore <strong>k</strong></li>
-                            </ul>
-                        </li>
-                        <li><strong>Regola della Mano Destra:</strong> Utilizzata per definire una terna <em>destrogira</em> o destrorsa, dove gli assi seguono l'orientamento naturale delle dita della mano.</li>
-                    </ul>
-                `
-            },
-            operazioni: {
-                title: "Operazioni con i Vettori",
-                body: `
-                    <p><strong>Somma di due vettori:</strong></p>
-                    <ul>
-                        <li><strong>Sulla stessa retta:</strong> Se i versi sono concordi, i moduli si sommano. Se discordi, si calcola la differenza.</li>
-                        <li><strong>Regola del Parallelogramma:</strong> Si usa per vettori applicati nello stesso punto; la somma è la diagonale del parallelogramma costruito sui vettori.</li>
-                        <li><strong>Regola del Poligono:</strong> Si disegna il secondo vettore con l'origine sull'estremo libero del primo; la somma chiude il poligono partendo dall'origine del primo.</li>
-                    </ul>
-                    <p><strong>Differenza:</strong> L'operazione A - B si riconduce alla somma di A con l'opposto di B (-B), ovvero un vettore con stessa direzione e modulo ma verso opposto.</p>
-                `
-            },
-            scomposizione: {
-                title: "Analisi Cartesiana e Scomposizione",
-                body: `
-                    <p>Ogni vettore <strong>V</strong> nel piano può essere scomposto nelle sue componenti rispetto alle rette coordinate X e Y.</p>
-                    <div class="formula-box">
-                        Relazioni Trigonometriche:<br>
-                        Vx = V * cos(α)<br>
-                        Vy = V * sin(α)
-                    </div>
-                    <p>Dove <strong>α</strong> è l'angolo compreso tra l'asse X e il vettore.</p>
-                    <div class="formula-box">
-                        Calcolo del Modulo (Teorema di Pitagora):<br>
-                        V = √(Vx² + Vy²)
-                    </div>
-                `
-            },
-            prodotti: {
-                title: "Prodotto Scalare vs Vettoriale",
-                body: `
-                    <ul>
-                        <li><strong>Prodotto Scalare (A · B):</strong> È uno scalare (un numero). 
-                            <div class="formula-box">A · B = AxBx + AyBy = AB * cos(γ)</div>
-                            È nullo se i vettori sono ortogonali (cos 90° = 0).
-                        </li>
-                        <li><strong>Prodotto Vettoriale (A x B):</strong> È un <strong>nuovo vettore</strong> che ha:
-                            <ul>
-                                <li><strong>Modulo:</strong> |A x B| = AB * sin(γ)</li>
-                                <li><strong>Direzione:</strong> Ortogonale al piano individuato dai due vettori.</li>
-                                <li><strong>Verso:</strong> Segue la regola della mano destra.</li>
-                            </ul>
-                        </li>
-                    </ul>
-                `
-            },
-            applicazioni: {
-                title: "Vettori nella Cinematica",
-                body: `
-                    <p>I concetti vettoriali sono alla base della descrizione del moto:</p>
-                    <ul>
-                        <li><strong>Vettore Posizione (OP):</strong> Definisce la posizione di un punto P rispetto all'origine O.</li>
-                        <li><strong>Vettore Spostamento (ΔP):</strong> La variazione di posizione in un intervallo di tempo Δt.</li>
-                        <li><strong>Velocità istantanea (v):</strong> Derivata della posizione rispetto al tempo: <strong>v(t) = dP/dt</strong>.</li>
-                        <li><strong>Accelerazione istantanea (a):</strong> Variazione della velocità nel tempo: <strong>a(t) = dv/dt</strong>.</li>
-                    </ul>
-                `
-            }
-        };
+  <h3>1.2 — Caricare le fonti</h3>
+  <p>Cliccate su <strong>"Aggiungi fonte"</strong> e caricate il PDF della dispensa fornita dal docente (ad esempio, il file sulla Teoria dei Vettori). Potete aggiungere anche altre fonti: appunti personali, pagine web, articoli. Più fonti caricate, più completa sarà la sintesi che NotebookLM produrrà.</p>
 
-        function openModal(key) {
-            const data = contentData[key];
-            const body = document.getElementById('modalBody');
-            body.innerHTML = `<h2 class="detail-title">${data.title}</h2>${data.body}`;
-            document.getElementById('modalOverlay').style.display = 'flex';
-        }
+  <div class="callout tip">
+    <div class="callout-title">Consiglio</div>
+    <p>Caricate anche il libro di testo in formato PDF, se disponibile. NotebookLM è in grado di incrociare le informazioni da fonti diverse e produrre una sintesi più ricca e affidabile.</p>
+  </div>
 
-        function closeModal() {
-            document.getElementById('modalOverlay').style.display = 'none';
-        }
-    </script>
+  <h3>1.3 — Esplorare e comprendere l'argomento</h3>
+  <p>Una volta caricate le fonti, NotebookLM genera automaticamente una panoramica. Usate la chat per fare domande e approfondire i punti che non vi sono chiari. Ecco alcuni prompt utili da scrivere nella chat di NotebookLM:</p>
+
+  <div class="prompt-block">
+    <p>Fammi un riassunto strutturato di tutto il contenuto del PDF, organizzato per argomenti principali.</p>
+  </div>
+
+  <div class="prompt-block">
+    <p>Quali sono le formule fondamentali trattate nel documento? Elencale con una breve spiegazione di ciascuna.</p>
+  </div>
+
+  <div class="prompt-block">
+    <p>Quali concetti sono più difficili da comprendere e perché? Spiegameli in modo semplice.</p>
+  </div>
+
+  <h3>1.4 — Generare l'infografica statica</h3>
+  <p>NotebookLM offre la possibilità di generare diversi tipi di output. Per ottenere l'infografica statica che userete come riferimento visivo:</p>
+
+  <ol>
+    <li>Nella barra laterale di NotebookLM, cercate la sezione <strong>"Studio"</strong> o <strong>"Genera"</strong>.</li>
+    <li>Selezionate il formato <strong>"Infografica"</strong> (o un formato visuale simile, a seconda della versione).</li>
+    <li>NotebookLM genererà un'immagine riassuntiva con i concetti chiave organizzati graficamente.</li>
+    <li><strong>Salvate l'immagine</strong>: clic destro → "Salva immagine con nome" → salvatela come file PNG sul vostro computer (ad esempio <code>infografica_notebooklm.png</code>).</li>
+  </ol>
+
+  <div class="callout warning">
+    <div class="callout-title">Importante</div>
+    <p>L'infografica di NotebookLM è <em>statica</em>: è un'immagine, non è interattiva. Il nostro obiettivo è usarla come <strong>modello grafico</strong> da cui partire per creare una versione interattiva con Claude.</p>
+  </div>
+</section>
+
+<!-- ===== STEP 2 ===== -->
+<section id="step2">
+  <h2><span class="step-num">Fase 2</span>Generazione dell'infografica statica</h2>
+
+  <p>A questo punto dovreste avere sul vostro computer due file:</p>
+  <ol>
+    <li>Il <strong>PDF originale</strong> della dispensa (ad esempio <code>Modulo_1_Teoria_vettori.pdf</code>).</li>
+    <li>L'<strong>immagine PNG</strong> dell'infografica generata da NotebookLM (ad esempio <code>infografica_notebooklm.png</code>).</li>
+  </ol>
+
+  <p>Prendetevi qualche minuto per <em>osservare attentamente</em> l'infografica statica. Annotate mentalmente:</p>
+  <ul>
+    <li>Quante sezioni tematiche ci sono?</li>
+    <li>Come sono organizzate spazialmente (griglia, colonne, ecc.)?</li>
+    <li>Quali formule e concetti chiave vengono evidenziati?</li>
+    <li>Quali elementi grafici vengono usati (frecce, diagrammi, icone)?</li>
+  </ul>
+  <p>Queste osservazioni vi aiuteranno a scrivere un prompt più efficace per Claude.</p>
+</section>
+
+<!-- ===== STEP 3 ===== -->
+<section id="step3">
+  <h2><span class="step-num">Fase 3</span>Preparare il materiale per Claude</h2>
+
+  <h3>3.1 — Accedere a Claude</h3>
+  <p>Andate su <code>claude.ai</code> e accedete con il vostro account. Se non ne avete uno, createlo gratuitamente.</p>
+
+  <h3>3.2 — Caricare i file</h3>
+  <p>Nella finestra di chat di Claude, cliccate sull'icona della graffetta (📎) per allegare file. Caricate <strong>entrambi</strong> i file:</p>
+  <ol>
+    <li>Il PDF della dispensa.</li>
+    <li>L'immagine PNG dell'infografica di NotebookLM.</li>
+  </ol>
+
+  <div class="callout info">
+    <div class="callout-title">Come funziona</div>
+    <p>Claude è in grado di leggere il contenuto dei PDF e di analizzare le immagini. Caricando entrambi, gli date sia il <em>contenuto completo</em> (dal PDF) sia il <em>riferimento grafico</em> (dall'immagine). In questo modo può generare un'infografica interattiva che è fedele ai contenuti e ispirata alla struttura visuale.</p>
+  </div>
+</section>
+
+<!-- ===== STEP 4 ===== -->
+<section id="step4">
+  <h2><span class="step-num">Fase 4</span>Il prompt per Claude: generare l'infografica interattiva</h2>
+
+  <p>Questa è la fase cruciale. La qualità del risultato dipende in larga misura dalla qualità del prompt. Di seguito trovate un modello di prompt che potete adattare al vostro argomento.</p>
+
+  <h3>4.1 — Il prompt base (da copiare e adattare)</h3>
+
+  <div class="prompt-block">
+    <p>A partire dal PDF che ti ho caricato e che contiene una lezione completa su <strong>[ARGOMENTO]</strong>, e sfruttando la rappresentazione grafica dall'infografica statica ottenuta da NotebookLM, crea un'infografica interattiva in formato HTML e JavaScript (un unico file).</p>
+    <p><br>Requisiti:</p>
+    <p>1. Usa la struttura tematica dell'infografica di NotebookLM come base per organizzare le sezioni.</p>
+    <p>2. Ciascuna sezione deve essere una card cliccabile.</p>
+    <p>3. Cliccando su ciascuna card, si deve aprire un pannello (o una modale) con l'approfondimento completo: definizioni rigorose, formule, dimostrazioni, e almeno un esempio pratico applicato al contesto di <strong>[DISCIPLINA / CONTESTO]</strong>.</p>
+    <p>4. Inserisci diagrammi e schemi grafici usando SVG inline dove appropriato.</p>
+    <p>5. La grafica deve essere curata, con animazioni fluide (transizioni CSS, effetti di hover, scroll reveal).</p>
+    <p>6. Il file deve essere completamente autocontenuto: un singolo file .html con CSS e JavaScript integrati.</p>
+    <p>7. Il design deve essere responsive (funzionare bene sia su desktop che su mobile).</p>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-title">Come adattare il prompt</div>
+    <p>Sostituite <strong>[ARGOMENTO]</strong> con il titolo del vostro modulo (es. "la Teoria dei Vettori", "le Sollecitazioni Semplici", "il Ciclo di Brayton") e <strong>[DISCIPLINA / CONTESTO]</strong> con il contesto applicativo (es. "costruzioni aeronautiche", "aerodinamica", "meccanica del volo").</p>
+  </div>
+
+  <h3>4.2 — Elementi che rendono il prompt efficace</h3>
+  <p>Analizziamo perché il prompt funziona bene:</p>
+
+  <div class="substep">
+    <h4>Specificità del formato di output</h4>
+    <p>Dire "un unico file HTML con CSS e JavaScript integrati" è fondamentale. Se non lo specificate, Claude potrebbe generare file separati, complicando la pubblicazione su GitHub Pages.</p>
+  </div>
+
+  <div class="substep">
+    <h4>Riferimento esplicito ai file caricati</h4>
+    <p>Le frasi "a partire dal PDF" e "sfruttando la rappresentazione grafica dall'infografica statica" dicono a Claude di usare entrambe le fonti: il PDF per i contenuti, l'immagine per la struttura visuale.</p>
+  </div>
+
+  <div class="substep">
+    <h4>Richiesta di interattività specifica</h4>
+    <p>Non basta dire "rendilo interattivo": è fondamentale descrivere <em>quale tipo</em> di interattività volete. Nel nostro caso: "card cliccabile → pannello con approfondimento".</p>
+  </div>
+
+  <div class="substep">
+    <h4>Richiesta di contenuto didattico</h4>
+    <p>Chiedere "definizioni rigorose, formule, dimostrazioni, almeno un esempio pratico" assicura che il pannello di approfondimento non sia superficiale ma contenga materiale utile allo studio.</p>
+  </div>
+
+  <h3>4.3 — Prompt opzionali per arricchire il risultato</h3>
+  <p>Dopo aver ottenuto la prima versione, potete chiedere a Claude miglioramenti specifici. Ecco alcuni prompt di follow-up:</p>
+
+  <div class="prompt-block">
+    <p>Aggiungi un'animazione SVG interattiva nella sezione sulla regola del parallelogramma: voglio che l'utente possa trascinare l'estremo di un vettore e vedere in tempo reale come cambia il vettore somma.</p>
+  </div>
+
+  <div class="prompt-block">
+    <p>Inserisci in ogni pannello di approfondimento un mini-quiz con una domanda a risposta multipla, con feedback immediato (giusto/sbagliato) e spiegazione della risposta corretta.</p>
+  </div>
+
+  <div class="prompt-block">
+    <p>Aggiungi un campo calcolatore interattivo nella sezione delle componenti cartesiane: l'utente inserisce il modulo e l'angolo, e il sistema calcola automaticamente vₓ e vᵧ, mostrando anche il vettore disegnato nel piano.</p>
+  </div>
+
+  <div class="prompt-block">
+    <p>Il colore di sfondo è troppo scuro, rendilo più chiaro. Inoltre le card sono troppo ravvicinate, aumenta lo spazio tra di esse. E aggiungi il mio nome e la classe nell'intestazione.</p>
+  </div>
+</section>
+
+<!-- ===== STEP 5 ===== -->
+<section id="step5">
+  <h2><span class="step-num">Fase 5</span>Revisione e raffinamento iterativo</h2>
+
+  <h3>5.1 — Scaricare il file HTML</h3>
+  <p>Quando Claude genera il file, vi apparirà un'anteprima e un pulsante per il download. Cliccate per scaricare il file <code>.html</code> sul vostro computer.</p>
+
+  <h3>5.2 — Testare in locale</h3>
+  <p>Aprite il file HTML con un doppio clic: si aprirà direttamente nel browser. Verificate:</p>
+  <ul>
+    <li>Tutte le sezioni si vedono correttamente?</li>
+    <li>Cliccando su ogni card, si apre il pannello di approfondimento?</li>
+    <li>I contenuti degli approfondimenti sono corretti e completi?</li>
+    <li>Le formule sono scritte in modo leggibile?</li>
+    <li>La pagina funziona anche riducendo la finestra del browser (simulando un cellulare)?</li>
+  </ul>
+
+  <h3>5.3 — Chiedere correzioni a Claude</h3>
+  <p>Se notate errori o aspetti da migliorare, tornate nella stessa conversazione con Claude e chiedete le modifiche. Siate specifici:</p>
+
+  <div class="prompt-block">
+    <p>Nella sezione "Versori", la definizione riporta un errore: scrivi che un versore è un vettore, non che un vettore è un versore. Correggi il testo del pannello di approfondimento.</p>
+  </div>
+
+  <div class="prompt-block">
+    <p>Il pannello della sezione "Prodotto vettoriale" non contiene la formula con il determinante della matrice 3×3. Aggiungila.</p>
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-title">Regola d'oro</div>
+    <p>Non accettate mai il primo output senza verificarlo. L'IA è potente ma non infallibile: le formule, le definizioni e i ragionamenti vanno sempre controllati con il materiale originale del docente. <strong>La responsabilità della correttezza è vostra.</strong></p>
+  </div>
+</section>
+
+<!-- ===== STEP 6 ===== -->
+<section id="step6">
+  <h2><span class="step-num">Fase 6</span>Creare un account GitHub</h2>
+
+  <p>Se avete già un account GitHub, saltate questa sezione.</p>
+
+  <h3>6.1 — Registrazione</h3>
+  <ol>
+    <li>Andate su <code>github.com</code>.</li>
+    <li>Cliccate su <strong>"Sign up"</strong>.</li>
+    <li>Inserite un'email, una password e uno <strong>username</strong>. Lo username sarà parte del vostro link finale, quindi scegliete qualcosa di riconoscibile (ad esempio: <code>nome-cognome</code> o le vostre iniziali seguite dalla classe, come <code>mr-4cat</code>).</li>
+    <li>Completate la verifica e confermate l'email.</li>
+  </ol>
+
+  <div class="callout info">
+    <div class="callout-title">Nota</div>
+    <p>GitHub è una piattaforma usata professionalmente da milioni di sviluppatori nel mondo. Avere un account GitHub è un valore aggiunto per il vostro curriculum, anche fuori dal contesto scolastico.</p>
+  </div>
+</section>
+
+<!-- ===== STEP 7 ===== -->
+<section id="step7">
+  <h2><span class="step-num">Fase 7</span>Creare il repository e caricare il file</h2>
+
+  <h3>7.1 — Creare un nuovo repository</h3>
+  <ol>
+    <li>Dopo il login su GitHub, cliccate sul pulsante <strong>"+"</strong> in alto a destra e selezionate <strong>"New repository"</strong>.</li>
+    <li>Compilate i campi:
+      <ul>
+        <li><strong>Repository name</strong>: scegliete un nome descrittivo, tutto minuscolo e senza spazi (usate i trattini). Ad esempio: <code>infografica-vettori</code>.</li>
+        <li><strong>Description</strong> (opzionale): una breve descrizione, ad es. "Infografica interattiva sulla Teoria dei Vettori — Costruzioni Aeronautiche".</li>
+        <li><strong>Visibilità</strong>: selezionate <strong>Public</strong> (necessario per GitHub Pages gratuito).</li>
+        <li>Spuntate <strong>"Add a README file"</strong>.</li>
+      </ul>
+    </li>
+    <li>Cliccate su <strong>"Create repository"</strong>.</li>
+  </ol>
+
+  <h3>7.2 — Caricare il file HTML</h3>
+  <ol>
+    <li>Nella pagina del repository appena creato, cliccate su <strong>"Add file"</strong> → <strong>"Upload files"</strong>.</li>
+    <li>Trascinate il vostro file HTML nella finestra, oppure cliccate su "choose your files" per selezionarlo dal computer.</li>
+    <li><strong>ATTENZIONE — Il file DEVE chiamarsi esattamente <code>index.html</code></strong>. Se il vostro file ha un altro nome (ad esempio <code>infografica_vettori.html</code>), rinominatelo in <code>index.html</code> <em>prima</em> di caricarlo. Questo è necessario perché GitHub Pages cerca automaticamente un file chiamato <code>index.html</code> come pagina principale.</li>
+    <li>Nel campo "Commit changes", scrivete un breve messaggio (ad esempio "Caricamento infografica interattiva") e cliccate su <strong>"Commit changes"</strong>.</li>
+  </ol>
+
+  <div class="callout danger">
+    <div class="callout-title">Errore frequente</div>
+    <p>Se il file non si chiama <code>index.html</code>, il link di GitHub Pages mostrerà una pagina vuota o un errore 404. Verificate sempre il nome del file prima di caricarlo.</p>
+  </div>
+</section>
+
+<!-- ===== STEP 8 ===== -->
+<section id="step8">
+  <h2><span class="step-num">Fase 8</span>Attivare GitHub Pages</h2>
+
+  <p>GitHub Pages è un servizio gratuito che trasforma il vostro repository in un sito web visibile a chiunque abbia il link. <strong>Questa funzionalità non si attiva da sola</strong>: dovete configurarla manualmente dalla scheda <em>Pages</em> nelle impostazioni del repository.</p>
+
+  <div class="callout danger">
+    <div class="callout-title">Passaggio obbligatorio</div>
+    <p>Se saltate questa fase, il vostro file HTML resterà un semplice file dentro il repository e <strong>non sarà visibile come pagina web</strong>. Nessun link funzionerà finché GitHub Pages non viene attivato.</p>
+  </div>
+
+  <h3>8.1 — Accedere alla scheda Pages</h3>
+  <p>Questo è il passaggio chiave. Seguite ogni punto con attenzione:</p>
+  <ol>
+    <li>Aprite la pagina principale del vostro repository su GitHub (quella dove vedete il file <code>index.html</code> nell'elenco).</li>
+    <li>Nella barra orizzontale in alto (quella con le schede <em>Code</em>, <em>Issues</em>, <em>Pull requests</em>, ecc.), cliccate sulla scheda <strong>"Settings"</strong> (⚙️ icona dell'ingranaggio, l'ultima a destra).</li>
+    <li>Si aprirà la pagina delle impostazioni. Nel <strong>menu laterale sinistro</strong>, scorrete verso il basso fino a trovare la voce <strong>"Pages"</strong> (si trova nella sezione "Code and automation"). <strong>Cliccateci sopra.</strong></li>
+  </ol>
+
+  <h3>8.2 — Configurare il deploy</h3>
+  <p>Ora siete nella pagina <strong>Settings → Pages</strong>. Qui dovete impostare tre parametri:</p>
+  <ol>
+    <li>Nella sezione <strong>"Build and deployment"</strong>, alla voce <strong>Source</strong>, selezionate dal menu a tendina: <code>Deploy from a branch</code>.</li>
+    <li>Subito sotto, alla voce <strong>Branch</strong>, selezionate: <code>main</code>.</li>
+    <li>Nel menu a tendina accanto (la cartella), lasciate: <code>/ (root)</code>.</li>
+    <li>Cliccate sul pulsante <strong>"Save"</strong>.</li>
+  </ol>
+
+  <p>Il percorso completo è quindi:</p>
+  <pre><code>Repository → Settings → Pages → Source: Deploy from a branch → Branch: main → Folder: / (root) → Save</code></pre>
+
+  <h3>8.3 — Attendere il deploy</h3>
+  <p>Dopo aver cliccato Save, GitHub avvia la pubblicazione del sito. Il processo richiede da 30 secondi a 2-3 minuti. Potete monitorare lo stato in due modi:</p>
+  <ul>
+    <li>Nella scheda <strong>"Actions"</strong> del repository: vedrete un workflow in esecuzione con un pallino giallo (in corso) o verde (completato).</li>
+    <li>Tornando su <strong>Settings → Pages</strong>: quando il deploy è completato, apparirà in alto un riquadro con la scritta <em>"Your site is live at..."</em> seguito dal link del vostro sito.</li>
+  </ul>
+
+  <div class="callout tip">
+    <div class="callout-title">Se il link non appare</div>
+    <p>Ricaricate la pagina Settings → Pages dopo 2-3 minuti. Se ancora non vedete il link, verificate di aver selezionato il branch <code>main</code> e la cartella <code>/ (root)</code>, e che il file si chiami esattamente <code>index.html</code>.</p>
+  </div>
+
+  <h3>8.4 — Il vostro link</h3>
+  <p>Il link avrà la seguente struttura:</p>
+
+  <pre><code>https://VOSTRO-USERNAME.github.io/NOME-REPOSITORY/</code></pre>
+
+  <p>Ad esempio, se il vostro username è <code>mr-4cat</code> e il repository si chiama <code>infografica-vettori</code>, il link sarà:</p>
+
+  <pre><code>https://mr-4cat.github.io/infografica-vettori/</code></pre>
+
+  <p>Apritelo nel browser per verificare che tutto funzioni.</p>
+
+  <div class="callout tip">
+    <div class="callout-title">Aggiornare il sito</div>
+    <p>Se in futuro volete aggiornare l'infografica, basta caricare un nuovo file <code>index.html</code> nel repository (sovrascrivendo il precedente). GitHub Pages si aggiornerà automaticamente in pochi minuti.</p>
+  </div>
+</section>
+
+<!-- ===== STEP 9 ===== -->
+<section id="step9">
+  <h2><span class="step-num">Fase 9</span>Inviare il link al docente</h2>
+
+  <h3>9.1 — Verifiche finali</h3>
+  <p>Prima di inviare il link, eseguite queste verifiche:</p>
+  <ol>
+    <li>Aprite il link in una <strong>finestra di navigazione privata</strong> (Incognito): questo simula il punto di vista di chi visita il sito per la prima volta, senza cache.</li>
+    <li>Verificate che la pagina si carichi correttamente.</li>
+    <li>Cliccate su <strong>tutte</strong> le sezioni per assicurarvi che gli approfondimenti si aprano.</li>
+    <li>Testate anche dal <strong>cellulare</strong>: aprite il link dal browser del telefono.</li>
+  </ol>
+
+  <h3>9.2 — Inviare</h3>
+  <p>Inviate al docente un messaggio (email o piattaforma indicata) contenente:</p>
+  <ul>
+    <li>Nome, cognome e classe.</li>
+    <li>Argomento dell'infografica.</li>
+    <li>Il link a GitHub Pages (ad esempio: <code>https://mr-4cat.github.io/infografica-vettori/</code>).</li>
+  </ul>
+
+  <div class="callout info">
+    <div class="callout-title">Formato email suggerito</div>
+    <p><strong>Oggetto</strong>: Infografica Interattiva — [Argomento] — [Cognome Nome] [Classe]</p>
+    <p><strong>Corpo</strong>: Gentile Prof. Raucci, le invio il link alla mia infografica interattiva sull'argomento "[Argomento]": [link]. Cordiali saluti, [Nome Cognome].</p>
+  </div>
+</section>
+
+<!-- ===== CRITERI ===== -->
+<section id="criteri">
+  <h2><span class="step-num">Appendice</span>Criteri di valutazione</h2>
+
+  <p>L'infografica verrà valutata secondo i seguenti criteri:</p>
+
+  <div class="substep">
+    <h4>1. Correttezza dei contenuti (40%)</h4>
+    <p>Le definizioni, le formule e i ragionamenti riportati negli approfondimenti sono corretti e coerenti con il materiale didattico? Non ci sono errori concettuali o imprecisioni?</p>
+  </div>
+
+  <div class="substep">
+    <h4>2. Completezza (20%)</h4>
+    <p>Tutti i concetti principali dell'argomento sono coperti? Ogni sezione ha un approfondimento significativo con almeno una formula e un esempio?</p>
+  </div>
+
+  <div class="substep">
+    <h4>3. Qualità dell'interazione (20%)</h4>
+    <p>L'infografica è effettivamente interattiva? Le animazioni e le transizioni funzionano? Il pannello di approfondimento si apre e si chiude correttamente?</p>
+  </div>
+
+  <div class="substep">
+    <h4>4. Qualità grafica e cura (10%)</h4>
+    <p>Il design è curato? I colori sono coerenti? I testi sono leggibili? La pagina è responsive?</p>
+  </div>
+
+  <div class="substep">
+    <h4>5. Pubblicazione corretta (10%)</h4>
+    <p>Il link funziona? Il sito è raggiungibile e l'infografica si visualizza correttamente nel browser senza bisogno di scaricare nulla?</p>
+  </div>
+</section>
+
+</div><!-- /wrapper -->
+
+<footer class="doc-footer">
+  <p>Prof. Ing. Raucci Biagio — ITIS E. Majorana, Cassino — A.S. 2025/2026</p>
+  <p>Costruzioni Aeronautiche — Laboratorio Digitale</p>
+</footer>
+
 </body>
 </html>

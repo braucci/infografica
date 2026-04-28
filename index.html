@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografica Interattiva: Teoria dei Vettori</title>
+    <style>
+        :root {
+            --primary: #1a4a7c;
+            --secondary: #3498db;
+            --accent: #e67e22;
+            --bg: #f4f7f6;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 { color: var(--primary); margin-bottom: 5px; }
+        .subtitle { color: #666; font-style: italic; }
+
+        .infographic-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        .category-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-top: 5px solid var(--secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            background-color: #fcfcfc;
+        }
+
+        .category-card h2 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-card p {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-btn:hover { color: var(--accent); }
+
+        .detail-title { color: var(--primary); border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-bottom: 20px; }
+        
+        .formula-box {
+            background: #f8f9fa;
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #333;
+        }
+
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; line-height: 1.5; }
+        strong { color: var(--primary); }
+
+        @media (max-width: 850px) {
+            .infographic-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Guida Interattiva alla Teoria dei Vettori</h1>
+        <p class="subtitle">Modulo 1 - Prof. Ing. Raucci Biagio (ITIS E. Majorana - Cassino)</p>
+    </header>
+
+    <div class="infographic-grid">
+        <!-- Card 1 -->
+        <div class="category-card" onclick="openModal('anatomia')">
+            <h2><span class="icon">📐</span> Anatomia del Vettore</h2>
+            <p>Scopri gli elementi fondamentali: modulo, direzione, verso e punto di applicazione.</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="category-card" onclick="openModal('scalari')">
+            <h2><span class="icon">🔢</span> Scalari vs Vettoriali</h2>
+            <p>La differenza tra grandezze definite solo da un numero e quelle che richiedono orientamento.</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="category-card" onclick="openModal('versori')">
+            <h2><span class="icon">🧭</span> Versori e Sistemi Oxyz</h2>
+            <p>I "mattoni" dell'orientamento: vettori unitari e la regola della mano destra.</p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="category-card" onclick="openModal('operazioni')">
+            <h2><span class="icon">➕</span> Operazioni Grafiche</h2>
+            <p>Come sommare e sottrarre vettori con le regole del parallelogramma e del poligono.</p>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="category-card" onclick="openModal('scomposizione')">
+            <h2><span class="icon">📉</span> Analisi Cartesiana</h2>
+            <p>Scomposizione in componenti X e Y utilizzando la trigonometria e il Teorema di Pitagora.</p>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="category-card" onclick="openModal('prodotti')">
+            <h2><span class="icon">✖️</span> Prodotti tra Vettori</h2>
+            <p>Confronto tra prodotto scalare (risultato numerico) e prodotto vettoriale (nuovo vettore).</p>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="category-card" onclick="openModal('applicazioni')" style="grid-column: 1 / -1; border-top-color: var(--accent);">
+            <h2><span class="icon">🚀</span> Applicazioni nella Fisica</h2>
+            <p>Come i vettori descrivono posizione, velocità e accelerazione nel moto di un punto.</p>
+        </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div id="modalBody">
+                <!-- Content injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const contentData = {
+            anatomia: {
+                title: "Anatomia e Rappresentazione del Vettore",
+                body: `
+                    <p>Un vettore può essere rappresentato graficamente da una <strong>freccia</strong> che fornisce tre informazioni essenziali:</p>
+                    <ul>
+                        <li><strong>Direzione:</strong> È la retta su cui giace la freccia.</li>
+                        <li><strong>Verso:</strong> Indicato dalla punta della freccia.</li>
+                        <li><strong>Modulo (o Intensità):</strong> La lunghezza della freccia che, in un'opportuna scala, fornisce il valore della grandezza.</li>
+                        <li><strong>Punto di Applicazione:</strong> Il punto di origine da cui parte il vettore.</li>
+                    </ul>
+                `
+            },
+            scalari: {
+                title: "Grandezze Scalari vs Vettoriali",
+                body: `
+                    <ul>
+                        <li><strong>Grandezze Scalari:</strong> Espresse semplicemente da un numero associato a un'unità di misura (es. massa, tempo). Esistono anche grandezze <em>adimensionali</em> (numeri puri).</li>
+                        <li><strong>Grandezze Vettoriali (Vettori):</strong> Per essere definite necessitano di modulo, direzione e verso (es. forza, velocità).</li>
+                    </ul>
+                `
+            },
+            versori: {
+                title: "Versori e Sistema di Assi Cartesiani",
+                body: `
+                    <p>I <strong>versori</strong> sono vettori speciali di modulo unitario e adimensionali.</p>
+                    <ul>
+                        <li><strong>Proprietà:</strong> Un vettore è un versore se e solo se il suo modulo è pari a 1.</li>
+                        <li><strong>Assi Cartesiani (Oxyz):</strong> Un sistema formato da tre rette ortogonali che si intersecano nell'origine O.</li>
+                        <li><strong>Versori Fondamentali:</strong> 
+                            <ul>
+                                <li>Asse x: versore <strong>i</strong></li>
+                                <li>Asse y: versore <strong>j</strong></li>
+                                <li>Asse z: versore <strong>k</strong></li>
+                            </ul>
+                        </li>
+                        <li><strong>Regola della Mano Destra:</strong> Utilizzata per definire una terna <em>destrogira</em> o destrorsa, dove gli assi seguono l'orientamento naturale delle dita della mano.</li>
+                    </ul>
+                `
+            },
+            operazioni: {
+                title: "Operazioni con i Vettori",
+                body: `
+                    <p><strong>Somma di due vettori:</strong></p>
+                    <ul>
+                        <li><strong>Sulla stessa retta:</strong> Se i versi sono concordi, i moduli si sommano. Se discordi, si calcola la differenza.</li>
+                        <li><strong>Regola del Parallelogramma:</strong> Si usa per vettori applicati nello stesso punto; la somma è la diagonale del parallelogramma costruito sui vettori.</li>
+                        <li><strong>Regola del Poligono:</strong> Si disegna il secondo vettore con l'origine sull'estremo libero del primo; la somma chiude il poligono partendo dall'origine del primo.</li>
+                    </ul>
+                    <p><strong>Differenza:</strong> L'operazione A - B si riconduce alla somma di A con l'opposto di B (-B), ovvero un vettore con stessa direzione e modulo ma verso opposto.</p>
+                `
+            },
+            scomposizione: {
+                title: "Analisi Cartesiana e Scomposizione",
+                body: `
+                    <p>Ogni vettore <strong>V</strong> nel piano può essere scomposto nelle sue componenti rispetto alle rette coordinate X e Y.</p>
+                    <div class="formula-box">
+                        Relazioni Trigonometriche:<br>
+                        Vx = V * cos(α)<br>
+                        Vy = V * sin(α)
+                    </div>
+                    <p>Dove <strong>α</strong> è l'angolo compreso tra l'asse X e il vettore.</p>
+                    <div class="formula-box">
+                        Calcolo del Modulo (Teorema di Pitagora):<br>
+                        V = √(Vx² + Vy²)
+                    </div>
+                `
+            },
+            prodotti: {
+                title: "Prodotto Scalare vs Vettoriale",
+                body: `
+                    <ul>
+                        <li><strong>Prodotto Scalare (A · B):</strong> È uno scalare (un numero). 
+                            <div class="formula-box">A · B = AxBx + AyBy = AB * cos(γ)</div>
+                            È nullo se i vettori sono ortogonali (cos 90° = 0).
+                        </li>
+                        <li><strong>Prodotto Vettoriale (A x B):</strong> È un <strong>nuovo vettore</strong> che ha:
+                            <ul>
+                                <li><strong>Modulo:</strong> |A x B| = AB * sin(γ)</li>
+                                <li><strong>Direzione:</strong> Ortogonale al piano individuato dai due vettori.</li>
+                                <li><strong>Verso:</strong> Segue la regola della mano destra.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                `
+            },
+            applicazioni: {
+                title: "Vettori nella Cinematica",
+                body: `
+                    <p>I concetti vettoriali sono alla base della descrizione del moto:</p>
+                    <ul>
+                        <li><strong>Vettore Posizione (OP):</strong> Definisce la posizione di un punto P rispetto all'origine O.</li>
+                        <li><strong>Vettore Spostamento (ΔP):</strong> La variazione di posizione in un intervallo di tempo Δt.</li>
+                        <li><strong>Velocità istantanea (v):</strong> Derivata della posizione rispetto al tempo: <strong>v(t) = dP/dt</strong>.</li>
+                        <li><strong>Accelerazione istantanea (a):</strong> Variazione della velocità nel tempo: <strong>a(t) = dv/dt</strong>.</li>
+                    </ul>
+                `
+            }
+        };
+
+        function openModal(key) {
+            const data = contentData[key];
+            const body = document.getElementById('modalBody');
+            body.innerHTML = `<h2 class="detail-title">${data.title}</h2>${data.body}`;
+            document.getElementById('modalOverlay').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
